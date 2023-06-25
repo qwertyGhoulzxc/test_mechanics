@@ -1,4 +1,4 @@
-import { FC, lazy, useEffect, useState } from 'react'
+import { FC, lazy, useEffect, useMemo, useState } from 'react'
 import { IPost } from '../../services/interfaces/Post.interface'
 import { PostService } from '../../services/postService'
 import {useInView} from 'react-intersection-observer'
@@ -39,9 +39,12 @@ const Posts: FC = () => {
 
     },[inView])
 
+    const memoizedPosts = useMemo(() => posts, [posts]);
+
+
   return <div>
   <h1>Posts:</h1>
-    {posts.map(val=>{
+    {memoizedPosts.map(val=>{
         return val.id==(page-1)*Limit+lazyLoadingPostStart?<Post key={val.id} ref={NextPageLoadingRef} post={val}/> :<Post key={val.id} post={val}/>
     })}
     {loading&&<div style={{display:'flex',justifyContent:"center",margin:'20px 0'}}>
